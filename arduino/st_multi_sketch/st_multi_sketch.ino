@@ -19,8 +19,10 @@ StImuMeasurement imu_measurement;
 StQuaternion q;
 StImuCalibration imu_calibration;
 StImuDriver imu_driver;
+StMessage message;
 
 void setup () {
+  Serial.begin(9600);
   imu_driver.init();
   imu_calibration.calibrateMagnetometer(&imu_driver, 10000, 50);
 }
@@ -28,5 +30,7 @@ void loop () {
   imu_driver.readAll(&imu_measurement);
   imu_calibration.applyCalibration(&imu_measurement);
   Madgwick9DOF(&q, imu_measurement, 2.5f, 10.0f);
+  message.pack(5,q);
+  Serial.write(message.data, message.size);
   delay(100);
 }

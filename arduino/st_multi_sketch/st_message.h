@@ -6,15 +6,28 @@
 //StMessage is the base class that stores a serialized message, which can be interpreted by the
 //St messaging protocol
 class StMessage {
-  private:
+  public:
     uint8_t data[256];
-    uint8_t size;
-    //Returns 1 if the message was successfully packed
+    uint16_t size;
+    StMessage(){};
+    template<class H, class T>
+    void pack(H h, T& object) {
+      //Pack the header
+      for(int i=0;i < sizeof(h); i++)
+        this->data[i] = *((uint8_t*)&h+i);
+      //Pack the payload
+      for(int i=0;i < sizeof(object);i++)
+        this->data[i+sizeof(h)] = *((uint8_t*)&object+i);
+        
+      this->size = sizeof(h)+sizeof(object);
+    };
     template<class T>
-    int pack(T& object, StMessageHeader h); 
-    
-    template<class T>
-    int pack(T& object, int tag);
+    void pack(int tag, T& object) {
+      StMessageHeader h;
+      h.tag = tag;
+      h.payload_size = sizeof(object);
+      this->pack(h,object);
+    };
 };
 
 #endif
