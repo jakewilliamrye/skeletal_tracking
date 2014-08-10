@@ -14,6 +14,7 @@
 #include "st_message_sender.h"
 #include "st_message_router.h"
 #include "st_message_receiver.h"
+#include "st_utils.h"
 
 StImuMeasurement imu_measurement;
 StQuaternion q;
