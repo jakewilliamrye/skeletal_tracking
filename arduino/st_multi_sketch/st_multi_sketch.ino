@@ -15,16 +15,18 @@
 #include "st_message_router.h"
 #include "st_message_receiver.h"
 
-StImuMeasurement m;
+StImuMeasurement imu_measurement;
 StQuaternion q;
-StImuCalibration mc;
+StImuCalibration imu_calibration;
 StImuDriver imu_driver;
 
 void setup () {
   imu_driver.init();
+  imu_calibration.calibrateMagnetometer(&imu_driver, 10000, 50);
 }
 void loop () {
-  imu_driver.readAll(&m);
-  Madgwick9DOF(&q, m, 2.5f, 10.0f);
+  imu_driver.readAll(&imu_measurement);
+  imu_calibration.applyCalibration(&imu_measurement);
+  Madgwick9DOF(&q, imu_measurement, 2.5f, 10.0f);
   delay(100);
 }
