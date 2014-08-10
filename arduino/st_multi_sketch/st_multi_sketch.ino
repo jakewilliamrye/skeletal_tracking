@@ -25,5 +25,6 @@ void setup () {
 }
 void loop () {
   imu_driver.readAll(&m);
+  Madgwick9DOF(&q, m, 2.5f, 10.0f);
   delay(100);
 }
