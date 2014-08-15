@@ -31,7 +31,9 @@ class StImuCalibration {
       accel_calibrated = false;
       mag_calibrated = false;
     };
-    
+    int toASCII(char* buffer) {
+      
+    };
     void applyCalibration(StImuMeasurement* m) {
       m->mx = (m->mx - this->mx_offset) * this->mx_gain;
       m->my = (m->my - this->my_offset) * this->my_gain;
@@ -85,9 +87,9 @@ class StImuCalibration {
         this->my_offset = (my_max + my_min) / 2.0f;
         this->mz_offset = (mz_max + mz_min) / 2.0f;
         //Calculate gains from min/max values
-        this->mx_gain = (mx_max - mx_min) / 2.0f;
-        this->my_gain = (my_max - my_min) / 2.0f;
-        this->mz_gain = (mz_max - mz_min) / 2.0f;
+        this->mx_gain = 2.0f / (mx_max - mx_min);
+        this->my_gain = 2.0f / (my_max - my_min);
+        this->mz_gain = 2.0f / (mz_max - mz_min);
         mag_calibrated = true;
         return true;
       }
